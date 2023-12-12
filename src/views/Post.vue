@@ -7,32 +7,26 @@
 </template>
 <script setup>
 import { onMounted } from 'vue';
-import usePost from '../composables/usePost';
-import useUser from '../composables/useUser';
+import usePostsUser from '../composables/usePostsUser';
 
 const props = defineProps({
   id: String,
 });
 
-const urlPost = 'https://jsonplaceholder.typicode.com/posts';
-const urlUser = 'https://jsonplaceholder.typicode.com/users';
+const baseUrl = 'https://jsonplaceholder.typicode.com';
+
+//URL's dels composables individuals.
+// const urlPost = 'https://jsonplaceholder.typicode.com/posts';
+// const urlUser = 'https://jsonplaceholder.typicode.com/users';
+
+//Fent ús del composable dels post i el user.
+const { post, llegirPost, user, llegirUser } = usePostsUser(baseUrl);
 
 
-const { post, llegirPost } = usePost(urlPost);
-const { user, llegirUser } = useUser(urlUser);
-
-onMounted(() => {
-  llegirPost(props.id);
-  llegirUser(props.id);
+onMounted(async () => {
+  await llegirPost(props.id);
+  //Hem d'esperar a llegir el post per tenir la id d'usuari que volem!
+  await llegirUser(post.value.userId);
 })
 
-// Post hardcodejat
-// const post = {
-//   title:
-//     "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
-//   body: "quia et suscipit suscipit recusandae consequuntur expedita et cum reprehenderit molestiae ut ut quas totam nostrum rerum est autem sunt rem eveniet architecto",
-// };
-// const user = {
-//   name: "Leanne Graham",
-// };
 </script>
